@@ -17,7 +17,6 @@ copied from the assignment description.
 import numpy as np
 import unittest
 import sympy
-from matplotlib import pyplot as plt
 
 
 class FiniteElements():
@@ -521,38 +520,3 @@ class FiniteElements():
         return nodes, IEN, ID
 
 
-# Run unit tests before anything else.
-unittest.main()
-
-if __name__ == "__main__":
-    # Generate the G and perform finite element analysis over it at d = 1/2
-    f = lambda x: np.exp(-(x[0]**2 +x[1]**2))
-    UUT = FiniteElements()
-    nodes, IEN, ID = UUT._generate_g_grid(1/2);
-    output = UUT.PerformFiniteElement(nodes, IEN, ID, f)
-
-    # Plot the tripcolour figure to show heat map.
-    plt.figure(figsize=(10,6))
-    plt.tripcolor(nodes[:,0], nodes[:,1], output, triangles=IEN)
-    plt.axis('equal')
-    plt.xlim(-1,5)
-    plt.ylim(-1,6)
-    plt.xlabel(r"$x$", fontsize=20)
-    plt.ylabel(r"$y$", fontsize=20)
-    plt.show()
-
-    # Generate the G and perform finite element analysis over it at d = 1/6
-    f = lambda x: np.exp(-(x[0]**2 +x[1]**2))
-    UUT = FiniteElements()
-    nodes, IEN, ID = UUT._generate_g_grid(1/6);
-    output = UUT.PerformFiniteElement(nodes, IEN, ID, f)
-
-    # Plot the tripcolour figure to show heat map.
-    plt.figure(figsize=(10,6))
-    plt.tripcolor(nodes[:,0], nodes[:,1], output, triangles=IEN)
-    plt.axis('equal')
-    plt.xlim(-1,5)
-    plt.ylim(-1,6)
-    plt.xlabel(r"$x$", fontsize=20)
-    plt.ylabel(r"$y$", fontsize=20)
-    plt.show()

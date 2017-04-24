@@ -17,7 +17,6 @@ copied from the assignment description.
 import numpy as np
 import unittest
 import sympy
-from matplotlib import pyplot as plt
 import FiniteElements as fe
 
 class FiniteElementsTest(unittest.TestCase):
@@ -354,5 +353,6 @@ class FiniteElementsTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    import xmlrunner
+    unittest.main(testRunner=xmlrunner.XMLTestRunner(output='test-reports'))
 
