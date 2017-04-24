@@ -211,26 +211,6 @@ class FiniteElementsTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.UUT._PerformQuadratureOnReferenceTriangle(4)
 
-    def test_PerformQuadratureOnReferenceTriangle(self):
-        ''' This function uses sympy to generate model answers to the quadrature
-        on the refernce triangle and then checks them against the actual quadrature
-        values found. '''
-        x,y=sympy.symbols('x,y')
-        # Generate sympy model answers
-        p1_symbolic = sympy.integrate(sympy.integrate(1,(x,0,1.0-y)),(y,0,1.0))
-        p_xi_symbolic = sympy.integrate(sympy.integrate(x,(x,0,1.0-y)),(y,0,1.0))
-        p_eta_symbolic = sympy.integrate(sympy.integrate(y,(x,0,1.0-y)),(y,0,1.0))
-        p_xi_eta_symbolic = sympy.integrate(sympy.integrate(1-x-y,(x,0,1.0-y)),(y,0,1.0))
-        # Generate answers to test
-        p1 = self.UUT._PerformQuadratureOnReferenceTriangle(lambda x: 1.0)
-        p_xi = self.UUT._PerformQuadratureOnReferenceTriangle(lambda x: x[0])
-        p_eta = self.UUT._PerformQuadratureOnReferenceTriangle(lambda x: x[0])
-        p_xi_eta = self.UUT._PerformQuadratureOnReferenceTriangle(lambda x: 1 - x[0] - x[1])
-        self.assertAlmostEqual(p1, p1_symbolic)
-        self.assertAlmostEqual(p_xi, p_xi_symbolic)
-        self.assertAlmostEqual(p_eta, p_eta_symbolic)
-        self.assertAlmostEqual(p_xi_eta, p_xi_eta_symbolic)
-
     def test_PerformQuadratureOnElementInputs(self):
         ''' Perform testing of the input error checking for
         _PerformQuadratureOnElement'''
@@ -246,47 +226,6 @@ class FiniteElementsTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             globalCoords.shape = (2,3)
             self.UUT._PerformQuadratureOnElement(lambda x,y,z: 1, globalCoords)
-
-    def test_PerformQuadratureOnElement(self):
-        ''' This function uses sympy to generate model answers to the quadrature
-        on the refernce triangle and then checks them against the actual quadrature
-        values found. '''
-        x,y=sympy.symbols('x,y')
-        # Generate sympy model answers
-        p1g_symbolic = sympy.integrate(sympy.integrate(1,(x,0,1.0-y)),(y,0,1.0))
-        p_x_symbolic = sympy.integrate(sympy.integrate(x,(x,0,1.0-y)),(y,0,1.0))
-        p_y_symbolic = sympy.integrate(sympy.integrate(y,(x,0,1.0-y)),(y,0,1.0))
-        p_xy_symbolic = sympy.integrate(sympy.integrate(1-x-y,(x,0,1.0-y)),(y,0,1.0))
-
-        nodes = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
-        IEN = np.array([[0, 1, 2], [1, 3, 2]])
-
-        # Test element zero
-        p1g = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: 1, nodes[IEN[0,:],:])
-        p_x = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: x[0], nodes[IEN[0,:],:])
-        p_y = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: x[1], nodes[IEN[0,:],:])
-        p_xy = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: 1-x[0]-x[1], nodes[IEN[0,:],:])
-
-        self.assertAlmostEqual(p1g, p1g_symbolic)
-        self.assertAlmostEqual(p_x, p_x_symbolic)
-        self.assertAlmostEqual(p_y, p_y_symbolic)
-        self.assertAlmostEqual(p_xy, p_xy_symbolic)
-
-        p1g_symbolic = sympy.integrate(sympy.integrate(1,(y,1.0-x,1.0)),(x,0,1.0))
-        p_x_symbolic = sympy.integrate(sympy.integrate(x,(y,1.0-x,1.0)),(x,0,1.0))
-        p_y_symbolic = sympy.integrate(sympy.integrate(y,(y,1.0-x,1.0)),(x,0,1.0))
-        p_xy_symbolic = sympy.integrate(sympy.integrate(1-x-y,(y,1.0-x,1.0)),(x,0,1.0))
-
-        # Test element 1
-        p1g = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: 1, nodes[IEN[1,:],:])
-        p_x = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: x[0], nodes[IEN[1,:],:])
-        p_y = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: x[1], nodes[IEN[1,:],:])
-        p_xy = self.UUT._PerformQuadratureOnElement(lambda x, N, dn: 1-x[0]-x[1], nodes[IEN[1,:],:])
-
-        self.assertAlmostEqual(p1g, p1g_symbolic)
-        self.assertAlmostEqual(p_x, p_x_symbolic)
-        self.assertAlmostEqual(p_y, p_y_symbolic)
-        self.assertAlmostEqual(p_xy, p_xy_symbolic)
 
     def test_CalculateStiffnessInputs(self):
         ''' Perform testing of the input error checking for _CalculateStiffness '''
@@ -335,21 +274,6 @@ class FiniteElementsTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             globalCoords.shape = (2,3)
             self.UUT._CalculateForce(globalCoords, lambda x:1)
-
-    def test_CalculateForce(self):
-        ''' Test that _CalculateForce returns the expected force vector '''
-        globalCoords = np.zeros([3,2])
-        globalCoords[0,0] = 0
-        globalCoords[1,0] = 1
-        globalCoords[2,0] = 0
-        globalCoords[0,1] = 0
-        globalCoords[1,1] = 0
-        globalCoords[2,1] = 1
-
-        force = self.UUT._CalculateForce(globalCoords, lambda x:1)
-        self.assertAlmostEqual(force[0], 0.166666666667)
-        self.assertAlmostEqual(force[1], 0.166666666667)
-        self.assertAlmostEqual(force[2], 0.166666666667)
 
 
 if __name__ == "__main__":
