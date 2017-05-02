@@ -19,7 +19,7 @@ import unittest
 import sympy
 
 print('#################################################################')
-print('Congratulations, the Finite Element code is running successfully!')
+print('Congratulations, <your name>, the Finite Element code is running successfully!')
 print('#################################################################')
 
 class FiniteElements():
