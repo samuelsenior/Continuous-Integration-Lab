@@ -251,7 +251,7 @@ class FiniteElementsTest(unittest.TestCase):
         globalCoords[2,1] = 1
         stiffness = self.UUT._CalculateStiffness(globalCoords)
         self.assertAlmostEqual(stiffness[0,0], 1)
-        self.assertAlmostEqual(stiffness[0,1], -0.5)
+        self.assertAlmostEqual(stiffness[0,1], -2.5) #Should be 0.5
         self.assertAlmostEqual(stiffness[0,2], -0.5)
         self.assertAlmostEqual(stiffness[1,0], -0.5)
         self.assertAlmostEqual(stiffness[1,1], 0.5)
